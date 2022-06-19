@@ -1,0 +1,7 @@
+class esotilin {
+    daniela = [1+1];
+    tilin = [1+1*2];
+    tili1n = [(1+1*6/3-5+7)];
+    tilidfan = [(1+1*5+1*2)];
+    tilin = [(1+1)];
+}
