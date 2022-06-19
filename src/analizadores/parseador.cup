@@ -15,10 +15,49 @@ parser code
     }
 :};
 
-terminal SEMICOLON, POINT, TRIPLEPOINT, COMMA, TIMES, AT, LEFT, RIGHT, LEFTBRACKET, RIGHTBRACKET, INTERROGATION, AMPERSAND, BYTE, SHORT, CHAR, INT, LONG, FLOAT, DOUBLE, BOOLEAN, SMALLER, GREATER, PACKAGE, STATIC, IMPORT, CLASS, EXTENDS, IMPLEMENTS, ENUM, INTERFACE, SUPER, PUBLIC, PROTECTED, PRIVATE, ABSTRACT, FINAL, NATIVE, SYNCHRONIZED, TRANSIENT, VOLATILE, STRICTFP, ASSIGNMENT, LEFTCURLY, RIGHTCURLY, VOID, IDENTIFIER, THROW, THROWS;
+terminal FINALLY, THIS, NEW, INSTANCEOF, DEFAULT, CASE, PIPE, CATCH, DO, FOR, BREAK, CONTINUE, RETURN, TRY, SYNCHRONIZED, WHILE, SWITCH, ASSERT, IF, ELSE, COLON, SEMICOLON, POINT, TRIPLEPOINT, COMMA, AT, LEFT, RIGHT, LEFTBRACKET, RIGHTBRACKET, INTERROGATION, AMPERSAND, BYTE, SHORT, CHAR, INT, LONG, FLOAT, DOUBLE, BOOLEAN, SMALLER, GREATER, PACKAGE, STATIC, IMPORT, CLASS, EXTENDS, IMPLEMENTS, ENUM, INTERFACE, SUPER, PUBLIC, PROTECTED, PRIVATE, ABSTRACT, FINAL, NATIVE, TRANSIENT, VOLATILE, STRICTFP, ASSIGNMENT, LEFTCURLY, RIGHTCURLY, VOID, IDENTIFIER, THROW, THROWS;
+terminal PLUS_ASSIGNMENT
+    , MINUS_ASSIGNMENT
+    , TIMES_ASSIGNMENT
+    , DIVIDE_ASSIGNMENT
+    , AND_ASSIGNMENT
+    , OR_ASSIGNMENT
+    , OR_EXCLUSIVE_ASSIGNMENT
+    , MODULE_ASSIGNMENT
+    , LEFTSHIFT_ASSIGNMENT
+    , RIGHTSHIFT_ASSIGNMENT
+    , DOUBLERIGHTSHIFT_ASSIGNMENT
+    , INTEGER_LITERAL
+    , FLOAT_LITERAL
+    , CHARACTER_LITERAL
+    , STRING_LITERAL
+    , BOOLEANLITERAL
+    , NULL_LITERAL;
+terminal LOGICAL_OR
+             , LOGICAL_AND
+             , LOGICAL_NOT
+             , POWER
+             , EQUALS
+             , NOT_EQUALS
+             , SMALLER_EQUALS
+             , GREATER_EQUALS
+             , LEFTSHIFT
+             , RIGHTSHIFT
+             , DOUBLERIGHTSHIFT
+             , PLUS
+             , MINUS
+             , TIMES
+             , DIVIDE
+             , MODULE
+             , BIT_NOT
+             , INCREMENT
+             , DECREMENT;
 
-non terminal QualifiedIdentifier, QualifiedIdentifierList, CompilationUnit, ImportDeclaration, TypeDeclaration, ClassOrInterfaceDeclaration, ClassDeclaration, InterfaceDeclaration, NormalClassDeclaration, EnumDeclaration, NormalInterfaceDeclaration, AnnotationTypeDeclaration, Type, BasicType, ReferenceType, TypeArguments, TypeArgument, NonWildcardTypeArguments, TypeList, TypeArgumentsOrDiamond, NonWildcardTypeArgumentsOrDiamond, TypeParameters, TypeParameter, Bound, Modifier, Annotations, Annotation, AnnotationElement, ElementValuePairs, ElementValuePair, ElementValue, ElementValueArrayInitializer, ElementValues, ClassBody, ClassBodyDeclaration, MemberDecl, MethodOrFieldDecl, MethodOrFieldRest, FieldDeclaratorsRest, MethodDeclaratorRest, VoidMethodDeclaratorRest, ConstructorDeclaratorRest, GenericMethodOrConstructorDecl, GenericMethodOrConstructorRest, InterfaceBody, InterfaceBodyDeclaration, InterfaceMemberDecl, InterfaceMethodOrFieldDecl, InterfaceMethodOrFieldRest, ConstantDeclaratorsRest, ConstantDeclaratorRest, ConstantDeclarator, InterfaceMethodDeclaratorRest, VoidInterfaceMethodDeclaratorRest, InterfaceGenericMethodDecl, FormalParameters, FormalParameterDecls, VariableModifier, FormalParameterDeclsRest, VariableDeclaratorId, VariableDeclarators, VariableDeclarator, VariableDeclaratorRest, VariableInitializer, ArrayInitializer, Block, BlockStatements, BlockStatement, LocalVariableDeclarationStatement, Statement, StatementExpression, Catches, CatchClause, CatchType, Finally, ResourceSpecification, Resources, Resource, SwitchBlockStatementGroups, SwitchBlockStatementGroup, SwitchLabels, SwitchLabel, EnumConstantName, ForControl, ForVarControl, ForVarControlRest, ForVariableDeclaratorsRest, ForInit, ForUpdate, Expression, AssignmentOperator, Expression1, Expression1Rest, Expression2, InfixOp, Expression3, PrefixOp, PostfixOp, Primary, Literal, ParExpression, Arguments, SuperSuffix, ExplicitGenericInvocationSuffix, Creator, CreatedName, ClassCreatorRest, ArrayCreatorRest, IdentifierSuffix, ExplicitGenericInvocation, InnerCreator, Selector, EnumBody, EnumConstants, EnumConstant, EnumBodyDeclarations, AnnotationTypeBody, AnnotationTypeElementDeclarations, AnnotationTypeElementDeclaration, AnnotationTypeElementRest, AnnotationMethodOrConstantRest, AnnotationMethodRest;
-non terminal Modifiers, Brackets, VariableModifiers, VariableInitializers;
+non terminal QualifiedIdentifier, QualifiedIdentifierList, CompilationUnit, ImportDeclaration, TypeDeclaration, ClassOrInterfaceDeclaration, ClassDeclaration, InterfaceDeclaration, NormalClassDeclaration, EnumDeclaration, NormalInterfaceDeclaration, AnnotationTypeDeclaration, Type, BasicType, ReferenceType, TypeArguments, TypeArgument, NonWildcardTypeArguments, TypeList, TypeArgumentsOrDiamond, NonWildcardTypeArgumentsOrDiamond, TypeParameters, TypeParameter, Bound, Modifier, Annotations, Annotation, AnnotationElement, ElementValuePairs, ElementValuePair, ElementValue, ElementValueArrayInitializer, ElementValues, ClassBody, ClassBodyDeclaration, MemberDecl, MethodOrFieldDecl, MethodOrFieldRest, FieldDeclaratorsRest, MethodDeclaratorRest, VoidMethodDeclaratorRest, ConstructorDeclaratorRest, GenericMethodOrConstructorDecl, GenericMethodOrConstructorRest, InterfaceBody, InterfaceBodyDeclaration, InterfaceMemberDecl, InterfaceMethodOrFieldDecl, InterfaceMethodOrFieldRest, ConstantDeclaratorsRest, ConstantDeclaratorRest, ConstantDeclarator, InterfaceMethodDeclaratorRest, VoidInterfaceMethodDeclaratorRest, InterfaceGenericMethodDecl, FormalParameters, FormalParameterDecls, VariableModifier, FormalParameterDeclsRest, VariableDeclaratorId, VariableDeclarators, VariableDeclarator, VariableDeclaratorRest, VariableInitializer, ArrayInitializer, Block, BlockStatements, BlockStatement, LocalVariableDeclarationStatement, Statement, StatementExpression, Catches, CatchClause, CatchType, Finally, ResourceSpecification, Resources, Resource, SwitchBlockStatementGroups, SwitchBlockStatementGroup, SwitchLabels, SwitchLabel, EnumConstantName, ForControl, ForVarControl, ForVarControlRest, ForVariableDeclaratorsRest, ForInit, ForUpdate, Expression, AssignmentOperator, Expression1, Expression1Rest, Expression2, Expression2Rest, InfixOp, Expression3, PrefixOp, PostfixOp, Primary, Literal, ParExpression, Arguments, SuperSuffix, ExplicitGenericInvocationSuffix, Creator, CreatedName, ClassCreatorRest, ArrayCreatorRest, IdentifierSuffix, ExplicitGenericInvocation, InnerCreator, Selector, EnumBody, EnumConstants, EnumConstant, EnumBodyDeclarations, AnnotationTypeBody, AnnotationTypeElementDeclarations, AnnotationTypeElementDeclaration, AnnotationTypeElementRest, AnnotationMethodOrConstantRest, AnnotationMethodRest;
+non terminal Modifiers, Brackets, VariableModifiers, VariableInitializers, PostfixOps, Selectors, CommaExpressions, BracketExpressions;
+non terminal ZeroOrMoreForVariableDeclarators, ZeroOrMoreExpression2RestInfixOp, CreatedNameIdentifiers;
+
+start with CompilationUnit;
 
 QualifiedIdentifier ::= IDENTIFIER
     | QualifiedIdentifier POINT IDENTIFIER
@@ -269,4 +308,259 @@ ArrayInitializer ::= LEFTCURLY RIGHTCURLY
     | LEFTCURLY VariableInitializers RIGHTCURLY
     | LEFTCURLY VariableInitializers COMMA RIGHTCURLY
 ;
+
+Block ::= LEFTCURLY BlockStatements RIGHTCURLY;
+BlockStatements ::= BlockStatement
+    |
+    | BlockStatements BlockStatement
+;
+BlockStatement ::= LocalVariableDeclarationStatement
+    | ClassOrInterfaceDeclaration
+    | IDENTIFIER COLON Statement
+    | Statement
+;
+LocalVariableDeclarationStatement ::= VariableModifiers Type VariableDeclarators SEMICOLON;
+Statement ::= Block
+    | SEMICOLON
+    | IDENTIFIER COLON Statement
+    | StatementExpression SEMICOLON
+    | IF ParExpression Statement
+    | IF ParExpression Statement ELSE Statement
+    | ASSERT Expression SEMICOLON
+    | ASSERT Expression COLON Expression SEMICOLON
+    | SWITCH ParExpression LEFTCURLY SwitchBlockStatementGroups RIGHTCURLY
+    | WHILE ParExpression Statement
+    | DO Statement WHILE ParExpression SEMICOLON
+    | FOR LEFT ForControl RIGHT Statement
+    | BREAK SEMICOLON
+    | BREAK IDENTIFIER SEMICOLON
+    | CONTINUE SEMICOLON
+    | CONTINUE IDENTIFIER SEMICOLON
+    | RETURN SEMICOLON
+    | RETURN Expression SEMICOLON
+    | THROW Expression SEMICOLON
+    | SYNCHRONIZED ParExpression Block
+    | TRY Block Catches
+    | TRY Block Finally
+    | TRY Block Catches Finally
+    | TRY ResourceSpecification Block
+    | TRY ResourceSpecification Block Catches
+    | TRY ResourceSpecification Block Finally
+    | TRY ResourceSpecification Block Catches Finally
+;
+StatementExpression ::= Expression;
+
+Catches ::= CatchClause
+    | Catches CatchClause
+;
+CatchClause ::= CATCH LEFT VariableModifiers CatchType IDENTIFIER RIGHT Block;
+CatchType ::= QualifiedIdentifier
+    | CatchType PIPE QualifiedIdentifier
+;
+Finally ::= FINALLY Block;
+ResourceSpecification ::= LEFT Resources RIGHT
+    | LEFT Resources SEMICOLON RIGHT
+;
+Resource ::= VariableModifiers ReferenceType VariableDeclaratorId ASSIGNMENT Expression;
+
+SwitchBlockStatementGroups ::= SwitchBlockStatementGroup
+    |
+    | SwitchBlockStatementGroups SwitchBlockStatementGroup
+;
+SwitchBlockStatementGroup ::= SwitchLabels BlockStatements;
+SwitchLabels ::= SwitchLabel
+    | SwitchLabels SwitchLabel
+;
+SwitchLabel ::= CASE Expression COLON
+    | CASE EnumConstantName COLON
+    | DEFAULT COLON
+;
+EnumConstantName ::= IDENTIFIER;
+
+ForControl ::= ForVarControl
+    | ForInit SEMICOLON SEMICOLON
+    | ForInit SEMICOLON SEMICOLON ForUpdate
+    | ForInit SEMICOLON Expression SEMICOLON
+    | ForInit SEMICOLON Expression SEMICOLON ForUpdate
+;
+ForVarControl ::= VariableModifiers Type VariableDeclaratorId ForVarControlRest;
+ForVarControlRest ::= ForVariableDeclaratorsRest SEMICOLON SEMICOLON
+    | ForVariableDeclaratorsRest SEMICOLON SEMICOLON ForUpdate
+    | ForVariableDeclaratorsRest SEMICOLON Expression SEMICOLON
+    | ForVariableDeclaratorsRest SEMICOLON Expression SEMICOLON ForUpdate
+    | COLON Expression
+;
+ForVariableDeclaratorsRest ::=
+    | ASSIGNMENT VariableInitializer
+    | ASSIGNMENT VariableInitializer ZeroOrMoreForVariableDeclarators
+    | ZeroOrMoreForVariableDeclarators
+;
+ZeroOrMoreForVariableDeclarators ::=
+    | COMMA VariableDeclarator
+    | ZeroOrMoreForVariableDeclarators COMMA VariableDeclarators
+;
+ForInit ::= StatementExpression
+    | ForInit StatementExpression
+;
+ForUpdate ::= StatementExpression
+    | ForUpdate StatementExpression
+;
+
+Expression ::= Expression1
+    | Expression1 AssignmentOperator Expression1
+;
+AssignmentOperator ::= ASSIGNMENT
+    | PLUS_ASSIGNMENT
+    | MINUS_ASSIGNMENT
+    | TIMES_ASSIGNMENT
+    | DIVIDE_ASSIGNMENT
+    | AND_ASSIGNMENT
+    | OR_ASSIGNMENT
+    | OR_EXCLUSIVE_ASSIGNMENT
+    | MODULE_ASSIGNMENT
+    | LEFTSHIFT_ASSIGNMENT
+    | RIGHTSHIFT_ASSIGNMENT
+    | DOUBLERIGHTSHIFT_ASSIGNMENT
+;
+Expression1 ::= Expression2
+    | Expression2 Expression1Rest
+;
+Expression1Rest ::= INTERROGATION Expression COLON Expression1;
+Expression2 ::= Expression3
+    | Expression3 Expression2Rest
+;
+Expression2Rest ::= ZeroOrMoreExpression2RestInfixOp
+    | INSTANCEOF Type
+;
+ZeroOrMoreExpression2RestInfixOp ::=
+    | InfixOp Expression3
+    | ZeroOrMoreExpression2RestInfixOp InfixOp Expression3
+;
+InfixOp ::= LOGICAL_OR
+    | LOGICAL_AND
+    | PIPE
+    | POWER
+    | AMPERSAND
+    | EQUALS
+    | NOT_EQUALS
+    | SMALLER
+    | GREATER
+    | SMALLER_EQUALS
+    | GREATER_EQUALS
+    | LEFTSHIFT
+    | RIGHTSHIFT
+    | DOUBLERIGHTSHIFT
+    | PLUS
+    | MINUS
+    | TIMES
+    | DIVIDE
+    | MODULE
+;
+Expression3 ::= PrefixOp Expression3
+    | LEFT Expression RIGHT Expression3
+    | LEFT Type RIGHT Expression3
+    | Primary Selectors PostfixOps
+;
+Selectors ::=
+    | Selector
+    | Selectors Selector
+;
+PostfixOps ::=
+    | PostfixOp
+    | PostfixOps PostfixOp
+;
+PrefixOp ::= INCREMENT
+    | DECREMENT
+    | LOGICAL_NOT
+    | BIT_NOT
+    | PLUS
+    | MINUS
+;
+PostfixOp ::= INCREMENT | DECREMENT;
+
+Primary ::= Literal
+    | ParExpression
+    | THIS
+    | THIS Arguments
+    | SUPER SuperSuffix
+    | NEW Creator
+    | NonWildcardTypeArguments ExplicitGenericInvocationSuffix
+    | NonWildcardTypeArguments THIS Arguments
+    | QualifiedIdentifier
+    | QualifiedIdentifier IdentifierSuffix
+    | BasicType Brackets POINT CLASS
+    | VOID POINT CLASS
+;
+Literal ::= INTEGER_LITERAL
+    FLOAT_LITERAL
+    CHARACTER_LITERAL
+    STRING_LITERAL
+    BOOLEANLITERAL
+    NULL_LITERAL
+;
+ParExpression ::= LEFT Expression RIGHT;
+Arguments ::= LEFT RIGHT
+    | LEFT Expression CommaExpressions
+;
+CommaExpressions ::=
+    | COMMA Expression
+    | CommaExpressions COMMA Expression
+;
+SuperSuffix ::= Arguments
+    | POINT IDENTIFIER
+    | POINT IDENTIFIER Arguments
+;
+ExplicitGenericInvocationSuffix ::= SUPER SuperSuffix
+    IDENTIFIER Arguments
+;
+
+Creator ::= NonWildcardTypeArguments CreatedName ClassCreatorRest
+    | CreatedName ClassCreatorRest
+    | CreatedName ArrayCreatorRest
+;
+CreatedName ::= IDENTIFIER CreatedNameIdentifiers
+    | IDENTIFIER TypeArgumentsOrDiamond CreatedNameIdentifiers
+;
+CreatedNameIdentifiers ::=
+    | POINT IDENTIFIER
+    | POINT IDENTIFIER TypeArgumentsOrDiamond
+    | CreatedNameIdentifiers POINT IDENTIFIER
+    | CreatedNameIdentifiers POINT IDENTIFIER TypeArgumentsOrDiamond
+;
+ClassCreatorRest ::= Arguments
+    | Arguments ClassBody
+;
+ArrayCreatorRest ::= LEFTBRACKET RIGHTBRACKET Brackets ArrayInitializer
+    | LEFTBRACKET Expression LEFTBRACKET BracketExpressions Brackets
+;
+BracketExpressions ::=
+    | LEFTBRACKET Expression RIGHTBRACKET
+    | BracketExpressions LEFTBRACKET Expression RIGHTBRACKET
+;
+IdentifierSuffix ::= LEFTBRACKET Brackets POINT CLASS RIGHTBRACKET
+    | LEFTBRACKET Expression RIGHTBRACKET
+    | Arguments
+    | POINT CLASS
+    | POINT ExplicitGenericInvocation
+    | POINT THIS
+    | POINT SUPER Arguments
+    | POINT NEW InnerCreator
+    | POINT NEW NonWildcardTypeArguments InnerCreator
+;
+ExplicitGenericInvocation ::= NonWildcardTypeArguments ExplicitGenericInvocationSuffix;
+InnerCreator ::= IDENTIFIER ClassCreatorRest
+    | IDENTIFIER NonWildcardTypeArgumentsOrDiamond ClassCreatorRest
+;
+Selector ::= POINT IDENTIFIER
+    | POINT IDENTIFIER Arguments
+    | POINT ExplicitGenericInvocation
+    | POINT THIS
+    | POINT SUPER SuperSuffix
+    | POINT NEW InnerCreator
+    | POINT NEW NonWildcardTypeArguments InnerCreator
+    |
+    | Expression
+;
+
+
 
