@@ -11,7 +11,7 @@ public class Main {
      * @param args argumentos de la linea de comando
      */
     public static void main(String[] args) {
-        interpretar("/home/fwcheesecake/IdeaProjects/testsyntaxer/src/entrada.txt");
+        interpretar("/home/fwcheesecake/IdeaProjects/testsyntaxer/src/LinkedList.java");
     }
     /**
      * Método que interpreta el contenido del archivo que se encuentra en el path

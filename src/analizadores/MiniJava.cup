@@ -1,4 +1,5 @@
 package analizadores;
+
 import java_cup.runtime.*;
 
 parser code
@@ -21,3 +22,246 @@ parser code
         " no reconocido.");
     }
 :}
+
+terminal
+IF,
+ELSE,
+SWITCH,
+CASE,
+DEFAULT,
+WHILE,
+DO,
+FOR,
+BREAK,
+CONTINUE,
+RETURN,
+FINAL,
+BOOLEAN,
+BYTE,
+SHORT,
+INT,
+LONG,
+FLOAT,
+DOUBLE,
+STRING,
+CLASS,
+THIS,
+STATIC,
+NEW,
+ENUM,
+ASSERT,
+NATIVE,
+VOID,
+STRICTFP,
+INTERFACE,
+IMPLEMENTS,
+ABSTRACT,
+EXTENDS,
+SUPER,
+CATCH,
+FINALLY,
+THROW,
+THROWS,
+TRY,
+SYNCHRONIZED,
+VOLATILE,
+TRANSIENT,
+NULL_LITERAL,
+PRIVATE,
+PUBLIC,
+PROTECTED,
+PACKAGE,
+IMPORT,
+INCREMENT,
+DECREMENT,
+LOGICAL_AND,
+LOGICAL_OR,
+LOGICAL_NOT,
+PLUS,
+MINUS,
+TIMES,
+DIVIDE,
+MODULE,
+EQUALS,
+GREATER_EQUALS,
+SMALLER_EQUALS,
+GREATER,
+SMALLER,
+DIFFERENT,
+QUOTES,
+INTERROGATION,
+BITWISE_NOT,
+LEFTSHIFT,
+RIGHTSHIFT,
+DOUBLE_RIGHTSHIFT,
+BITWISE_OR,
+BITWISE_AND,
+BITWISE_XOR,
+ASSIGNMENT,
+PLUS_ASSIGNMENT,
+MINUS_ASSIGNMENT,
+TIMES_ASSIGNMENT,
+DIVIDE_ASSIGNMENT,
+MODULE_ASSIGNMENT,
+BITWISE_NOT_ASSIGNMENT,
+BITWISE_OR_ASSIGNMENT,
+BITWISE_AND_ASSIGNMENT,
+BITWISE_XOR_ASSIGNMENT,
+LEFTSHIFT_ASSIGNMENT,
+RIGHTSHIFT_ASSIGNMENT,
+LEFT,
+RIGHT,
+LEFT_CURLY,
+RIGHT_CURLY,
+LEFT_BRACKET,
+RIGHT_BRACKET,
+SEMICOLON,
+COLON,
+POINT,
+COMMA,
+BOOLEAN_LITERAL,
+TRUE,
+FALSE,
+INTEGER_LITERAL,
+FLOATING_POINT_LITERAL,
+IDENTIFIER,
+MAIN,
+SOUT,
+LENGTH,
+INSTANCEOF,
+ERROR
+;
+
+non terminal Program, MainClass, ClassDeclaration, VarDeclaration, MethodDeclaration, Type, Statement, Expression, Operator, Identifier;
+
+non terminal
+    oomClassDeclaration,
+    oomVarDeclaration,
+    oomMethodDeclaration,
+    oomStatement,
+    oomCommaTypeIdentifier,
+    oomCommaExpression
+;
+
+precedence left ASSIGNMENT, PLUS_ASSIGNMENT, MINUS_ASSIGNMENT, TIMES_ASSIGNMENT, DIVIDE_ASSIGNMENT, MODULE_ASSIGNMENT, BITWISE_NOT_ASSIGNMENT, BITWISE_OR_ASSIGNMENT, BITWISE_AND_ASSIGNMENT, BITWISE_XOR_ASSIGNMENT, LEFTSHIFT_ASSIGNMENT, RIGHTSHIFT_ASSIGNMENT;
+
+precedence left LOGICAL_OR;
+precedence left LOGICAL_AND;
+precedence left BITWISE_OR;
+
+precedence left BITWISE_XOR;
+precedence left BITWISE_AND;
+precedence left EQUALS, DIFFERENT;
+precedence left GREATER, GREATER_EQUALS, SMALLER, SMALLER_EQUALS, INSTANCEOF;
+precedence left LEFTSHIFT, RIGHTSHIFT, DOUBLE_RIGHTSHIFT;
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE, MODULE;
+
+precedence left ELSE, LEFT_BRACKET, POINT;
+
+start with Program;
+
+Program ::= MainClass
+    | MainClass oomClassDeclaration
+;
+MainClass ::= CLASS Identifier LEFT_CURLY PUBLIC STATIC VOID MAIN LEFT STRING LEFT_BRACKET RIGHT_BRACKET Identifier RIGHT LEFT_CURLY Statement RIGHT_CURLY RIGHT_CURLY
+;
+ClassDeclaration ::= CLASS Identifier LEFT_CURLY RIGHT_CURLY
+    | CLASS Identifier EXTENDS Identifier LEFT_CURLY RIGHT_CURLY
+
+    | CLASS Identifier LEFT_CURLY oomVarDeclaration RIGHT_CURLY
+    | CLASS Identifier EXTENDS Identifier LEFT_CURLY oomVarDeclaration RIGHT_CURLY
+
+    | CLASS Identifier LEFT_CURLY oomMethodDeclaration RIGHT_CURLY
+    | CLASS Identifier EXTENDS Identifier LEFT_CURLY oomMethodDeclaration RIGHT_CURLY
+
+    | CLASS Identifier LEFT_CURLY oomVarDeclaration oomMethodDeclaration RIGHT_CURLY
+    | CLASS Identifier EXTENDS Identifier LEFT_CURLY oomVarDeclaration oomMethodDeclaration RIGHT_CURLY
+;
+VarDeclaration ::= Type Identifier SEMICOLON;
+MethodDeclaration ::=
+      PUBLIC Type Identifier LEFT RIGHT LEFT_CURLY RETURN Expression SEMICOLON RIGHT_CURLY
+    | PUBLIC Type Identifier LEFT Type Identifier RIGHT LEFT_CURLY RETURN Expression SEMICOLON RIGHT_CURLY
+    | PUBLIC Type Identifier LEFT Type Identifier oomCommaTypeIdentifier RIGHT LEFT_CURLY RETURN Expression SEMICOLON RIGHT_CURLY
+
+    | PUBLIC Type Identifier LEFT RIGHT LEFT_CURLY oomStatement RETURN Expression SEMICOLON RIGHT_CURLY
+    | PUBLIC Type Identifier LEFT RIGHT LEFT_CURLY oomVarDeclaration RETURN Expression SEMICOLON RIGHT_CURLY
+    | PUBLIC Type Identifier LEFT RIGHT LEFT_CURLY oomVarDeclaration oomStatement RETURN Expression SEMICOLON RIGHT_CURLY
+
+    | PUBLIC Type Identifier LEFT Type Identifier RIGHT LEFT_CURLY oomStatement RETURN Expression SEMICOLON RIGHT_CURLY
+    | PUBLIC Type Identifier LEFT Type Identifier oomCommaTypeIdentifier RIGHT LEFT_CURLY oomStatement RETURN Expression SEMICOLON RIGHT_CURLY
+
+    | PUBLIC Type Identifier LEFT Type Identifier RIGHT LEFT_CURLY oomVarDeclaration RETURN Expression SEMICOLON RIGHT_CURLY
+    | PUBLIC Type Identifier LEFT Type Identifier oomCommaTypeIdentifier RIGHT LEFT_CURLY oomVarDeclaration RETURN Expression SEMICOLON RIGHT_CURLY
+
+    | PUBLIC Type Identifier LEFT Type Identifier RIGHT LEFT_CURLY oomVarDeclaration oomStatement RETURN Expression SEMICOLON RIGHT_CURLY
+    | PUBLIC Type Identifier LEFT Type Identifier oomCommaTypeIdentifier RIGHT LEFT_CURLY oomVarDeclaration oomStatement RETURN Expression SEMICOLON RIGHT_CURLY
+;
+Type ::= INT LEFT_BRACKET RIGHT_BRACKET
+    | BOOLEAN
+    | INT
+    | Identifier
+;
+Statement ::= LEFT_CURLY RIGHT_CURLY
+    | LEFT_CURLY oomStatement RIGHT_CURLY
+
+    | IF LEFT Expression RIGHT Statement
+    | IF LEFT Expression RIGHT Statement ELSE Statement
+
+    | WHILE LEFT Expression RIGHT SEMICOLON
+    | WHILE LEFT Expression RIGHT Statement
+
+    | SOUT LEFT Expression RIGHT SEMICOLON
+
+    | Identifier ASSIGNMENT Expression SEMICOLON
+    | Identifier LEFT_BRACKET Expression RIGHT_BRACKET ASSIGNMENT Expression SEMICOLON
+;
+Expression ::= Expression Operator Expression
+    | Expression LEFT_BRACKET Expression RIGHT_BRACKET
+    | Expression POINT LENGTH
+
+    | Expression POINT Identifier LEFT RIGHT
+    | Expression POINT Identifier LEFT Expression RIGHT
+    | Expression POINT Identifier LEFT Expression oomCommaExpression RIGHT
+
+    | INTEGER_LITERAL
+    | TRUE
+    | FALSE
+    | Identifier
+    | THIS
+    | NEW INT LEFT_BRACKET Expression RIGHT_BRACKET
+    | NEW Identifier LEFT RIGHT
+    | NEW Identifier LEFT Expression RIGHT
+    | LOGICAL_NOT Expression
+    | LEFT Expression RIGHT
+;
+Operator ::= PLUS
+    | MINUS
+    | SMALLER
+    | LOGICAL_AND
+    | TIMES
+;
+
+Identifier ::= IDENTIFIER;
+
+/**---------------------------------------------
+              ESPECIAL PRODUCTIONS
+----------------------------------------------*/
+oomClassDeclaration ::= ClassDeclaration
+    | oomClassDeclaration ClassDeclaration
+;
+oomVarDeclaration ::= VarDeclaration
+    | oomVarDeclaration VarDeclaration
+;
+oomMethodDeclaration ::= MethodDeclaration
+    | oomMethodDeclaration MethodDeclaration
+;
+oomStatement ::= Statement
+    | oomStatement Statement
+;
+oomCommaTypeIdentifier ::= COMMA Type Identifier
+    | oomCommaTypeIdentifier COMMA Type Identifier
+;
+oomCommaExpression ::= COMMA Expression
+    | oomCommaExpression COMMA Expression
+;
