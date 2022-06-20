@@ -1,18 +1,10 @@
-package analizadores;/*
- * Ejemplo desarrollado por Erick Navarro
- * Blog: e-navarro.blogspot.com
- * Julio - 2018
- */
+package analizadores;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-/**
- * Clase principal de la aplicación
- * @author Erick
- */
 public class Main {
 
     /**

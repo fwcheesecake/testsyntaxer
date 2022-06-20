@@ -1,55 +1,66 @@
-package codigo;
+package analizadores;
 
 import java_cup.runtime.Symbol;
 
 parser code
 {:
-    private Symbol s;
-    
-    public void syntax_error(Symbol s){
-        this.s = s;
+    /**
+     * Método al que se llama automáticamente ante algún error sintactico.
+     **/
+    public void syntax_error(Symbol s) {
+        System.out.println("Error Sintáctico en la Línea " + (s.left) +
+        " Columna "+s.right+ ". No se esperaba este componente: " +s.value+".");
     }
 
-    public Symbol getS(){
-        return this.s;
+    /**
+     * Método al que se llama automáticamente ante algún error sintáctico
+     * en el que ya no es posible una recuperación de errores.
+     **/
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+        System.out.println("Error síntactico irrecuperable en la Línea " +
+        (s.left)+ " Columna "+s.right+". Componente " + s.value +
+        " no reconocido.");
     }
-:};
+:}
 
-terminal FINALLY, THIS, NEW, INSTANCEOF, DEFAULT, CASE, PIPE, CATCH, DO, FOR, BREAK, CONTINUE, RETURN, TRY, SYNCHRONIZED, WHILE, SWITCH, ASSERT, IF, ELSE, COLON, SEMICOLON, POINT, TRIPLEPOINT, COMMA, AT, LEFT, RIGHT, LEFTBRACKET, RIGHTBRACKET, INTERROGATION, AMPERSAND, BYTE, SHORT, CHAR, INT, LONG, FLOAT, DOUBLE, BOOLEAN, SMALLER, GREATER, PACKAGE, STATIC, IMPORT, CLASS, EXTENDS, IMPLEMENTS, ENUM, INTERFACE, SUPER, PUBLIC, PROTECTED, PRIVATE, ABSTRACT, FINAL, NATIVE, TRANSIENT, VOLATILE, STRICTFP, ASSIGNMENT, LEFTCURLY, RIGHTCURLY, VOID, IDENTIFIER, THROW, THROWS;
+terminal FINALLY, THIS, NEW, INSTANCEOF, DEFAULT, CASE, BITWISE_OR, CATCH, DO, FOR, BREAK, CONTINUE, RETURN, TRY, SYNCHRONIZED, WHILE, SWITCH, ASSERT, IF, ELSE, COLON, SEMICOLON, POINT, TRIPLEPOINT, COMMA, AT, LEFT, RIGHT, LEFT_BRACKET, RIGHT_BRACKET, INTERROGATION, BITWISE_AND, BYTE, SHORT, CHAR, INT, LONG, FLOAT, DOUBLE, BOOLEAN, SMALLER, GREATER, PACKAGE, STATIC, IMPORT, CLASS, EXTENDS, IMPLEMENTS, ENUM, INTERFACE, SUPER, PUBLIC, PROTECTED, PRIVATE, ABSTRACT, FINAL, NATIVE, TRANSIENT, VOLATILE, STRICTFP, ASSIGNMENT, LEFT_CURLY, RIGHT_CURLY, VOID, IDENTIFIER, THROW, THROWS;
 terminal PLUS_ASSIGNMENT
     , MINUS_ASSIGNMENT
     , TIMES_ASSIGNMENT
     , DIVIDE_ASSIGNMENT
-    , AND_ASSIGNMENT
-    , OR_ASSIGNMENT
-    , OR_EXCLUSIVE_ASSIGNMENT
+    , BITWISE_AND_ASSIGNMENT
+    , BITWISE_OR_ASSIGNMENT
+    , BITWISE_XOR_ASSIGNMENT
+    , BITWISE_NOT_ASSIGNMENT
     , MODULE_ASSIGNMENT
     , LEFTSHIFT_ASSIGNMENT
     , RIGHTSHIFT_ASSIGNMENT
-    , DOUBLERIGHTSHIFT_ASSIGNMENT
+    , DOUBLE_RIGHTSHIFT_ASSIGNMENT
     , INTEGER_LITERAL
-    , FLOAT_LITERAL
+    , FLOATING_POINT_LITERAL
     , CHARACTER_LITERAL
     , STRING_LITERAL
-    , BOOLEANLITERAL
-    , NULL_LITERAL;
+    , BOOLEAN_LITERAL
+    , NULL_LITERAL
+    , QUOTES
+    , STRING;
 terminal LOGICAL_OR
              , LOGICAL_AND
              , LOGICAL_NOT
-             , POWER
+             , BITWISE_XOR
              , EQUALS
-             , NOT_EQUALS
+             , DIFFERENT
              , SMALLER_EQUALS
              , GREATER_EQUALS
              , LEFTSHIFT
              , RIGHTSHIFT
-             , DOUBLERIGHTSHIFT
+             , DOUBLE_RIGHTSHIFT
              , PLUS
              , MINUS
              , TIMES
              , DIVIDE
              , MODULE
-             , BIT_NOT
+             , BITWISE_NOT
              , INCREMENT
              , DECREMENT;
 
@@ -120,9 +131,9 @@ NormalInterfaceDeclaration ::= INTERFACE IDENTIFIER InterfaceBody
 AnnotationTypeDeclaration ::= AT IDENTIFIER AnnotationTypeBody;
 
 Type ::= BasicType
-    | BasicType LEFTBRACKET RIGHTBRACKET
+    | BasicType LEFT_BRACKET RIGHT_BRACKET
     | ReferenceType
-    | ReferenceType LEFTBRACKET RIGHTBRACKET
+    | ReferenceType LEFT_BRACKET RIGHT_BRACKET
 ;
 BasicType ::= BYTE
     | SHORT
@@ -163,7 +174,7 @@ TypeParameter ::= IDENTIFIER
     | IDENTIFIER EXTENDS Bound COMMA TypeParameter
 ;
 Bound ::= ReferenceType
-    | ReferenceType AMPERSAND Bound
+    | ReferenceType BITWISE_AND Bound
 ;
 
 Modifier ::= Annotation
@@ -198,12 +209,12 @@ ElementValue ::= Annotation
     | Expression1
     | ElementValueArrayInitializer
 ;
-ElementValueArrayInitializer ::= LEFTCURLY ElementValues RIGHTCURLY;
+ElementValueArrayInitializer ::= LEFT_CURLY ElementValues RIGHT_CURLY;
 ElementValues ::= ElementValue
     | ElementValue COMMA ElementValues
 ;
 
-ClassBody ::= LEFTCURLY ClassBodyDeclaration RIGHTCURLY;
+ClassBody ::= LEFT_CURLY ClassBodyDeclaration RIGHT_CURLY;
 ClassBodyDeclaration ::= SEMICOLON
     | Modifiers MemberDecl
     | STATIC Block
@@ -229,8 +240,8 @@ MethodDeclaratorRest ::= FormalParameters Brackets Block
     | FormalParameters Brackets THROWS QualifiedIdentifierList Block
     | FormalParameters Brackets THROWS QualifiedIdentifierList SEMICOLON
 ;
-Brackets ::= LEFTBRACKET RIGHTBRACKET
-    | Brackets LEFTBRACKET RIGHTBRACKET
+Brackets ::= LEFT_BRACKET RIGHT_BRACKET
+    | Brackets LEFT_BRACKET RIGHT_BRACKET
     |
 ;
 VoidMethodDeclaratorRest ::= FormalParameters Block
@@ -247,7 +258,7 @@ GenericMethodOrConstructorRest ::= Type IDENTIFIER MethodDeclaratorRest
     | IDENTIFIER ConstructorDeclaratorRest
 ;
 
-InterfaceBody ::= LEFTCURLY InterfaceBodyDeclaration RIGHTCURLY;
+InterfaceBody ::= LEFT_CURLY InterfaceBodyDeclaration RIGHT_CURLY;
 InterfaceBodyDeclaration ::= SEMICOLON
     | Modifiers InterfaceMemberDecl
 ;
@@ -304,12 +315,12 @@ VariableInitializer ::= ArrayInitializer
 VariableInitializers ::= VariableInitializer
     | VariableInitializers VariableInitializer
 ;
-ArrayInitializer ::= LEFTCURLY RIGHTCURLY
-    | LEFTCURLY VariableInitializers RIGHTCURLY
-    | LEFTCURLY VariableInitializers COMMA RIGHTCURLY
+ArrayInitializer ::= LEFT_CURLY RIGHT_CURLY
+    | LEFT_CURLY VariableInitializers RIGHT_CURLY
+    | LEFT_CURLY VariableInitializers COMMA RIGHT_CURLY
 ;
 
-Block ::= LEFTCURLY BlockStatements RIGHTCURLY;
+Block ::= LEFT_CURLY BlockStatements RIGHT_CURLY;
 BlockStatements ::= BlockStatement
     |
     | BlockStatements BlockStatement
@@ -328,7 +339,7 @@ Statement ::= Block
     | IF ParExpression Statement ELSE Statement
     | ASSERT Expression SEMICOLON
     | ASSERT Expression COLON Expression SEMICOLON
-    | SWITCH ParExpression LEFTCURLY SwitchBlockStatementGroups RIGHTCURLY
+    | SWITCH ParExpression LEFT_CURLY SwitchBlockStatementGroups RIGHT_CURLY
     | WHILE ParExpression Statement
     | DO Statement WHILE ParExpression SEMICOLON
     | FOR LEFT ForControl RIGHT Statement
@@ -355,7 +366,7 @@ Catches ::= CatchClause
 ;
 CatchClause ::= CATCH LEFT VariableModifiers CatchType IDENTIFIER RIGHT Block;
 CatchType ::= QualifiedIdentifier
-    | CatchType PIPE QualifiedIdentifier
+    | CatchType BITWISE_OR QualifiedIdentifier
 ;
 Finally ::= FINALLY Block;
 ResourceSpecification ::= LEFT Resources RIGHT
@@ -414,13 +425,13 @@ AssignmentOperator ::= ASSIGNMENT
     | MINUS_ASSIGNMENT
     | TIMES_ASSIGNMENT
     | DIVIDE_ASSIGNMENT
-    | AND_ASSIGNMENT
-    | OR_ASSIGNMENT
-    | OR_EXCLUSIVE_ASSIGNMENT
+    | BITWISE_AND_ASSIGNMENT
+    | BITWISE_OR_ASSIGNMENT
+    | BITWISE_XOR_ASSIGNMENT
     | MODULE_ASSIGNMENT
     | LEFTSHIFT_ASSIGNMENT
     | RIGHTSHIFT_ASSIGNMENT
-    | DOUBLERIGHTSHIFT_ASSIGNMENT
+    | DOUBLE_RIGHTSHIFT_ASSIGNMENT
 ;
 Expression1 ::= Expression2
     | Expression2 Expression1Rest
@@ -438,18 +449,18 @@ ZeroOrMoreExpression2RestInfixOp ::=
 ;
 InfixOp ::= LOGICAL_OR
     | LOGICAL_AND
-    | PIPE
-    | POWER
-    | AMPERSAND
+    | BITWISE_OR
+    | BITWISE_XOR
+    | BITWISE_AND
     | EQUALS
-    | NOT_EQUALS
+    | DIFFERENT
     | SMALLER
     | GREATER
     | SMALLER_EQUALS
     | GREATER_EQUALS
     | LEFTSHIFT
     | RIGHTSHIFT
-    | DOUBLERIGHTSHIFT
+    | DOUBLE_RIGHTSHIFT
     | PLUS
     | MINUS
     | TIMES
@@ -472,7 +483,7 @@ PostfixOps ::=
 PrefixOp ::= INCREMENT
     | DECREMENT
     | LOGICAL_NOT
-    | BIT_NOT
+    | BITWISE_NOT
     | PLUS
     | MINUS
 ;
@@ -492,10 +503,10 @@ Primary ::= Literal
     | VOID POINT CLASS
 ;
 Literal ::= INTEGER_LITERAL
-    FLOAT_LITERAL
+    FLOATING_POINT_LITERAL
     CHARACTER_LITERAL
     STRING_LITERAL
-    BOOLEANLITERAL
+    BOOLEAN_LITERAL
     NULL_LITERAL
 ;
 ParExpression ::= LEFT Expression RIGHT;
@@ -530,15 +541,15 @@ CreatedNameIdentifiers ::=
 ClassCreatorRest ::= Arguments
     | Arguments ClassBody
 ;
-ArrayCreatorRest ::= LEFTBRACKET RIGHTBRACKET Brackets ArrayInitializer
-    | LEFTBRACKET Expression LEFTBRACKET BracketExpressions Brackets
+ArrayCreatorRest ::= LEFT_BRACKET RIGHT_BRACKET Brackets ArrayInitializer
+    | LEFT_BRACKET Expression LEFT_BRACKET BracketExpressions Brackets
 ;
 BracketExpressions ::=
-    | LEFTBRACKET Expression RIGHTBRACKET
-    | BracketExpressions LEFTBRACKET Expression RIGHTBRACKET
+    | LEFT_BRACKET Expression RIGHT_BRACKET
+    | BracketExpressions LEFT_BRACKET Expression RIGHT_BRACKET
 ;
-IdentifierSuffix ::= LEFTBRACKET Brackets POINT CLASS RIGHTBRACKET
-    | LEFTBRACKET Expression RIGHTBRACKET
+IdentifierSuffix ::= LEFT_BRACKET Brackets POINT CLASS RIGHT_BRACKET
+    | LEFT_BRACKET Expression RIGHT_BRACKET
     | Arguments
     | POINT CLASS
     | POINT ExplicitGenericInvocation
