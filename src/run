@@ -1,0 +1,3 @@
+#!/bin/zsh
+jflex analizadores/Lexer.flex
+cup -expect 600 -parser Sintactico analizadores/MiniJava.cup
