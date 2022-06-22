@@ -1,0 +1,4 @@
+#!/bin/zsh
+jflex analizadores/Lexer.flex
+cup -expect 600 -package analizadores -parser Sintactico analizadores/MiniJava.cup
+mv Sintactico.java sym.java ./analizadores

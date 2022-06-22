@@ -15,11 +15,11 @@ import java_cup.runtime.*;
 /* Variables, comentarios y espacios */
 TerminadorDeLinea = \r|\n|\r\n
 EntradaDeCaracter = [^\r\n]
-EspacioEnBlanco = {TerminadorDeLinea} | [ \t\f]
-ComentarioTradicional = "/" [^] ~"/" | "/" "*"+ "/"
+EspacioEnBlanco = {TerminadorDeLinea} | [\ \t\f]
+ComentarioTradicional = "/*" [^*] ~"*/" | "/*" "*"+ "/"
 FinDeLineaComentario = "//" {EntradaDeCaracter}* {TerminadorDeLinea}?
-ContenidoComentario = ( [^] | \+ [^/] )
-ComentarioDeDocumentacion = "/*" {ContenidoComentario} ""+ "/"
+ContenidoComentario = ( [^*] | \*+ [^/*] )*
+ComentarioDeDocumentacion = "/**" {ContenidoComentario} "*"+ "/"
 InputChar = [^\n\r]
 SpaceChar = [\ \t]
 LineChar = \n|\r|\r\n
@@ -40,6 +40,7 @@ CChar = [^\'\\\n\r] | {EscChar}
 SChar = [^\"\\\n\r] | {EscChar}
 EscChar = \\[ntbrf\\\'\"] | {OctalEscape}
 OctalEscape = \\[0-7] | \\[0-7][0-7] | \\[0-3][0-7][0-7]
+StringLit = \"[^\\\"]*\"
 /* Comentarios */
 Comentario = {ComentarioTradicional} | {FinDeLineaComentario} | {ComentarioDeDocumentacion}
 
@@ -51,9 +52,6 @@ Identificador = {Letra}({Letra}|{Digito})*
 /* Números */
 Numero = 0 | [1-9][0-9]*
 %%
-
-/* Comentarios o espacios */
-{Comentario}|{EspacioEnBlanco} { }
 
 if { return token(sym.IF, yyline, yycolumn, yytext()); }
 else { return token(sym.ELSE, yyline, yycolumn, yytext()); }
@@ -76,40 +74,31 @@ long { return token(sym.LONG, yyline, yycolumn, yytext()); }
 float { return token(sym.FLOAT, yyline, yycolumn, yytext()); }
 double { return token(sym.DOUBLE, yyline, yycolumn, yytext()); }
 String { return token(sym.STRING, yyline, yycolumn, yytext()); }
+char { return token(sym.CHAR, yyline, yycolumn, yytext()); }
 class { return token(sym.CLASS, yyline, yycolumn, yytext()); }
 
-this { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-static { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-new { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-enum { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-assert { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-native { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-void { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-strictfp { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-interface { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-implements { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-abstract { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-extends { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-super { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-catch { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-finally { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-throw { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-throws { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-try { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-synchronized { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-volatile { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-transient { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-null { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-Scanner { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-System { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-java { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-util { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-main { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-args { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-out { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-in { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-println { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
-nextInt { return token(sym.RESERVADA, yyline, yycolumn, yytext()); }
+this { return token(sym.THIS, yyline, yycolumn, yytext()); }
+static { return token(sym.STATIC, yyline, yycolumn, yytext()); }
+new { return token(sym.NEW, yyline, yycolumn, yytext()); }
+enum { return token(sym.ENUM, yyline, yycolumn, yytext()); }
+assert { return token(sym.ASSERT, yyline, yycolumn, yytext()); }
+native { return token(sym.NATIVE, yyline, yycolumn, yytext()); }
+void { return token(sym.VOID, yyline, yycolumn, yytext()); }
+strictfp { return token(sym.STRICTFP, yyline, yycolumn, yytext()); }
+interface { return token(sym.INTERFACE, yyline, yycolumn, yytext()); }
+implements { return token(sym.IMPLEMENTS, yyline, yycolumn, yytext()); }
+abstract { return token(sym.ABSTRACT, yyline, yycolumn, yytext()); }
+extends { return token(sym.EXTENDS, yyline, yycolumn, yytext()); }
+super { return token(sym.SUPER, yyline, yycolumn, yytext()); }
+catch { return token(sym.CATCH, yyline, yycolumn, yytext()); }
+finally { return token(sym.FINALLY, yyline, yycolumn, yytext()); }
+throw { return token(sym.THROW, yyline, yycolumn, yytext()); }
+throws { return token(sym.THROWS, yyline, yycolumn, yytext()); }
+try { return token(sym.TRY, yyline, yycolumn, yytext()); }
+synchronized { return token(sym.SYNCHRONIZED, yyline, yycolumn, yytext()); }
+volatile { return token(sym.VOLATILE, yyline, yycolumn, yytext()); }
+transient { return token(sym.TRANSIENT, yyline, yycolumn, yytext()); }
+null { return token(sym.NULL_LITERAL, yyline, yycolumn, yytext()); }
 
 private { return token(sym.PRIVATE, yyline, yycolumn, yytext()); }
 public { return token(sym.PUBLIC, yyline, yycolumn, yytext()); }
@@ -117,61 +106,67 @@ protected { return token(sym.PROTECTED, yyline, yycolumn, yytext()); }
 package { return token(sym.PACKAGE, yyline, yycolumn, yytext()); }
 import { return token(sym.IMPORT, yyline, yycolumn, yytext()); }
 
-"++" { return token(sym.INCREMENTO, yyline, yycolumn, yytext()); }
-"--" { return token(sym.DECREMENTO, yyline, yycolumn, yytext()); }
-"&&" { return token(sym.ANDLOGICO, yyline, yycolumn, yytext()); }
-"||" { return token(sym.ORLOGICO, yyline, yycolumn, yytext()); }
-"!" { return token(sym.NEGACION, yyline, yycolumn, yytext()); }
-\+ { return token(sym.SUMA, yyline, yycolumn, yytext()); }
-"-" { return token(sym.RESTA, yyline, yycolumn, yytext()); }
-"*" { return token(sym.MULTIPLICACION, yyline, yycolumn, yytext()); }
-"/" { return token(sym.DIAGONAL, yyline, yycolumn, yytext()); }
-"%" { return token(sym.MODULO, yyline, yycolumn, yytext()); }
+"++" { return token(sym.INCREMENT, yyline, yycolumn, yytext()); }
+"--" { return token(sym.DECREMENT, yyline, yycolumn, yytext()); }
+"&&" { return token(sym.LOGICAL_AND, yyline, yycolumn, yytext()); }
+"||" { return token(sym.LOGICAL_OR, yyline, yycolumn, yytext()); }
+"!" { return token(sym.LOGICAL_NOT, yyline, yycolumn, yytext()); }
+\+ { return token(sym.PLUS, yyline, yycolumn, yytext()); }
+"-" { return token(sym.MINUS, yyline, yycolumn, yytext()); }
+"*" { return token(sym.TIMES, yyline, yycolumn, yytext()); }
+"/" { return token(sym.DIVIDE, yyline, yycolumn, yytext()); }
+"%" { return token(sym.MODULE, yyline, yycolumn, yytext()); }
 
-"==" { return token(sym.IGUAL, yyline, yycolumn, yytext()); }
-">=" { return token(sym.MAYORIGUAL, yyline, yycolumn, yytext()); }
-"<=" { return token(sym.MENORIGUAL, yyline, yycolumn, yytext()); }
-">" { return token(sym.MAYORQUE, yyline, yycolumn, yytext()); }
-"<" { return token(sym.MENORQUE, yyline, yycolumn, yytext()); }
-"!=" { return token(sym.DIFERENTEDE, yyline, yycolumn, yytext()); }
+"==" { return token(sym.EQUALS, yyline, yycolumn, yytext()); }
+">=" { return token(sym.GREATER_EQUALS, yyline, yycolumn, yytext()); }
+"<=" { return token(sym.SMALLER_EQUALS, yyline, yycolumn, yytext()); }
+">" { return token(sym.GREATER, yyline, yycolumn, yytext()); }
+"<" { return token(sym.SMALLER, yyline, yycolumn, yytext()); }
+"!=" { return token(sym.DIFFERENT, yyline, yycolumn, yytext()); }
 
-\" { return token(sym.COMILLAS, yyline, yycolumn, yytext()); }
-"?:" { return token(sym.INTERROGACION, yyline, yycolumn, yytext()); }
-"~" { return token(sym.VIRGUILLA, yyline, yycolumn, yytext()); }
-"<<" { return token(sym.DOBLEMAYORQUE, yyline, yycolumn, yytext()); }
-">>" { return token(sym.DOBLEMENORQUE, yyline, yycolumn, yytext()); }
-">>>" { return token(sym.TRIPLEMENORQUE, yyline, yycolumn, yytext()); }
-"|" { return token(sym.OR, yyline, yycolumn, yytext()); }
-"&" { return token(sym.AND, yyline, yycolumn, yytext()); }
-"^" { return token(sym.EXPONENTE, yyline, yycolumn, yytext()); }
-"=" { return token(sym.ASIGNACION, yyline, yycolumn, yytext()); }
-"+=" { return token(sym.MASIGUAL, yyline, yycolumn, yytext()); }
-"-=" { return token(sym.MENOSIGUAL, yyline, yycolumn, yytext()); }
-"*=" { return token(sym.PORIGUAL, yyline, yycolumn, yytext()); }
-"/=" { return token(sym.DIVISIONIGUAL, yyline, yycolumn, yytext()); }
-"%=" { return token(sym.MODULOIGUAL, yyline, yycolumn, yytext()); }
-"~=" { return token(sym.NOTIGUAL, yyline, yycolumn, yytext()); }
-"|=" { return token(sym.ORIGUAL, yyline, yycolumn, yytext()); }
-"&=" { return token(sym.ANDIGUAL, yyline, yycolumn, yytext()); }
-"^=" { return token(sym.ASIGNACIONOREXCLUSIVO, yyline, yycolumn, yytext()); }
-"<<=" { return token(sym.DOBLEMAYORQUEIGUAL, yyline, yycolumn, yytext()); }
-">>=" { return token(sym.DOBLEMENORQUEIGUAL, yyline, yycolumn, yytext()); }
+// \" { return token(sym.QUOTES, yyline, yycolumn, yytext()); }
+"?:" { return token(sym.INTERROGATION, yyline, yycolumn, yytext()); }
+"~" { return token(sym.BITWISE_NOT, yyline, yycolumn, yytext()); }
+"<<" { return token(sym.LEFTSHIFT, yyline, yycolumn, yytext()); }
+">>" { return token(sym.RIGHTSHIFT, yyline, yycolumn, yytext()); }
+">>>" { return token(sym.DOUBLE_RIGHTSHIFT, yyline, yycolumn, yytext()); }
+"|" { return token(sym.BITWISE_OR, yyline, yycolumn, yytext()); }
+"&" { return token(sym.BITWISE_AND, yyline, yycolumn, yytext()); }
+"^" { return token(sym.BITWISE_XOR, yyline, yycolumn, yytext()); }
+"=" { return token(sym.ASSIGNMENT, yyline, yycolumn, yytext()); }
+"+=" { return token(sym.PLUS_ASSIGNMENT, yyline, yycolumn, yytext()); }
+"-=" { return token(sym.MINUS_ASSIGNMENT, yyline, yycolumn, yytext()); }
+"*=" { return token(sym.TIMES_ASSIGNMENT, yyline, yycolumn, yytext()); }
+"/=" { return token(sym.DIVIDE_ASSIGNMENT, yyline, yycolumn, yytext()); }
+"%=" { return token(sym.MODULE_ASSIGNMENT, yyline, yycolumn, yytext()); }
+"~=" { return token(sym.BITWISE_NOT_ASSIGNMENT, yyline, yycolumn, yytext()); }
+"|=" { return token(sym.BITWISE_OR_ASSIGNMENT, yyline, yycolumn, yytext()); }
+"&=" { return token(sym.BITWISE_AND_ASSIGNMENT, yyline, yycolumn, yytext()); }
+"^=" { return token(sym.BITWISE_XOR_ASSIGNMENT, yyline, yycolumn, yytext()); }
+"<<=" { return token(sym.LEFTSHIFT_ASSIGNMENT, yyline, yycolumn, yytext()); }
+">>=" { return token(sym.RIGHTSHIFT_ASSIGNMENT, yyline, yycolumn, yytext()); }
 
-"(" { return token(sym.PARENTESISIZQ, yyline, yycolumn, yytext()); }
-")" { return token(sym.PARENTESISDER, yyline, yycolumn, yytext()); }
-"{" { return token(sym.LLAVEIZQ, yyline, yycolumn, yytext()); }
-"}" { return token(sym.LLAVEDER, yyline, yycolumn, yytext()); }
-"[" { return token(sym.CORCHETEIZQ, yyline, yycolumn, yytext()); }
-"]" { return token(sym.CORCHETEDER,  yyline, yycolumn, yytext()); }
-";" { return token(sym.PUNTOYCOMA, yyline, yycolumn, yytext()); }
-":" { return token(sym.DOSPUNTOS, yyline, yycolumn, yytext()); }
-"." { return token(sym.PUNTO, yyline, yycolumn, yytext()); }
-"," { return token(sym.COMA, yyline, yycolumn, yytext()); }
-true { return token(sym.VERDADERO, yyline, yycolumn, yytext()); }
-false { return token(sym.FALSO, yyline, yycolumn, yytext()); }
-{Integer} {return token(sym.ENTERO, yyline, yycolumn, yytext()); }
-{Float} { return token(sym.FLOTANTE, yyline, yycolumn, yytext()); }
+"(" { return token(sym.LEFT, yyline, yycolumn, yytext()); }
+")" { return token(sym.RIGHT, yyline, yycolumn, yytext()); }
+"{" { return token(sym.LEFT_CURLY, yyline, yycolumn, yytext()); }
+"}" { return token(sym.RIGHT_CURLY, yyline, yycolumn, yytext()); }
+"[" { return token(sym.LEFT_BRACKET, yyline, yycolumn, yytext()); }
+"]" { return token(sym.RIGHT_BRACKET,  yyline, yycolumn, yytext()); }
+";" { return token(sym.SEMICOLON, yyline, yycolumn, yytext()); }
+":" { return token(sym.COLON, yyline, yycolumn, yytext()); }
+"." { return token(sym.DOT, yyline, yycolumn, yytext()); }
+"," { return token(sym.COMMA, yyline, yycolumn, yytext()); }
+true { return token(sym.BOOLEAN_LITERAL, yyline, yycolumn, yytext()); }
+false { return token(sym.BOOLEAN_LITERAL, yyline, yycolumn, yytext()); }
 
-{Ident} { return token(sym.IDENTIFICADOR, yyline, yycolumn, yytext()); }
+{Integer} {return token(sym.INTEGER_LITERAL, yyline, yycolumn, yytext()); }
+{Float} { return token(sym.FLOATING_POINT_LITERAL, yyline, yycolumn, yytext()); }
+{StringLit} { return token(sym.STRING_LITERAL, yyline, yycolumn, yytext()); }
+
+/* Comentarios o espacios */
+{Comentario} { /* ignore */ }
+{EspacioEnBlanco} { /* ignore */ }
+
+{Ident} { return token(sym.IDENTIFIER, yyline, yycolumn, yytext()); }
 
 . { return token(sym.ERROR, yyline, yycolumn, yytext()); }
