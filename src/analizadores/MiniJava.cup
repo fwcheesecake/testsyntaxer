@@ -23,245 +23,344 @@ parser code
     }
 :}
 
-terminal
-IF,
-ELSE,
-SWITCH,
-CASE,
-DEFAULT,
-WHILE,
-DO,
-FOR,
-BREAK,
-CONTINUE,
-RETURN,
-FINAL,
-BOOLEAN,
-BYTE,
-SHORT,
-INT,
-LONG,
-FLOAT,
-DOUBLE,
-STRING,
-CLASS,
-THIS,
-STATIC,
-NEW,
-ENUM,
-ASSERT,
-NATIVE,
-VOID,
-STRICTFP,
-INTERFACE,
-IMPLEMENTS,
-ABSTRACT,
-EXTENDS,
-SUPER,
-CATCH,
-FINALLY,
-THROW,
-THROWS,
-TRY,
-SYNCHRONIZED,
-VOLATILE,
-TRANSIENT,
-NULL_LITERAL,
-PRIVATE,
-PUBLIC,
-PROTECTED,
-PACKAGE,
-IMPORT,
-INCREMENT,
-DECREMENT,
-LOGICAL_AND,
-LOGICAL_OR,
-LOGICAL_NOT,
-PLUS,
-MINUS,
-TIMES,
-DIVIDE,
-MODULE,
-EQUALS,
-GREATER_EQUALS,
-SMALLER_EQUALS,
-GREATER,
-SMALLER,
-DIFFERENT,
-QUOTES,
-INTERROGATION,
-BITWISE_NOT,
-LEFTSHIFT,
-RIGHTSHIFT,
-DOUBLE_RIGHTSHIFT,
-BITWISE_OR,
-BITWISE_AND,
-BITWISE_XOR,
-ASSIGNMENT,
-PLUS_ASSIGNMENT,
-MINUS_ASSIGNMENT,
-TIMES_ASSIGNMENT,
-DIVIDE_ASSIGNMENT,
-MODULE_ASSIGNMENT,
-BITWISE_NOT_ASSIGNMENT,
-BITWISE_OR_ASSIGNMENT,
-BITWISE_AND_ASSIGNMENT,
-BITWISE_XOR_ASSIGNMENT,
-LEFTSHIFT_ASSIGNMENT,
-RIGHTSHIFT_ASSIGNMENT,
-LEFT,
-RIGHT,
-LEFT_CURLY,
-RIGHT_CURLY,
-LEFT_BRACKET,
-RIGHT_BRACKET,
-SEMICOLON,
-COLON,
-POINT,
-COMMA,
-BOOLEAN_LITERAL,
-TRUE,
-FALSE,
-INTEGER_LITERAL,
-FLOATING_POINT_LITERAL,
-IDENTIFIER,
-MAIN,
-SOUT,
-LENGTH,
-INSTANCEOF,
-ERROR
+terminal IF, ELSE, SWITCH, CASE, DEFAULT, WHILE, DO, FOR, BREAK, CONTINUE, RETURN, FINAL, BOOLEAN, BYTE, SHORT, INT, LONG, FLOAT, DOUBLE, STRING, CHAR, CLASS, THIS, STATIC, NEW, ENUM, ASSERT, NATIVE, VOID, STRICTFP, INTERFACE, IMPLEMENTS, ABSTRACT, EXTENDS, SUPER, CATCH, FINALLY, THROW, THROWS, TRY, SYNCHRONIZED, VOLATILE, TRANSIENT, NULL_LITERAL, PRIVATE, PUBLIC, PROTECTED, PACKAGE, IMPORT, INCREMENT, DECREMENT, LOGICAL_AND, LOGICAL_OR, LOGICAL_NOT, PLUS, MINUS, TIMES, DIVIDE, MODULE, EQUALS, GREATER_EQUALS, SMALLER_EQUALS, GREATER, SMALLER, DIFFERENT, QUOTES, INTERROGATION, BITWISE_NOT, LEFTSHIFT, RIGHTSHIFT, DOUBLE_RIGHTSHIFT, BITWISE_OR, BITWISE_AND, BITWISE_XOR, ASSIGNMENT, PLUS_ASSIGNMENT, MINUS_ASSIGNMENT, TIMES_ASSIGNMENT, DIVIDE_ASSIGNMENT, MODULE_ASSIGNMENT, BITWISE_NOT_ASSIGNMENT, BITWISE_OR_ASSIGNMENT, BITWISE_AND_ASSIGNMENT, BITWISE_XOR_ASSIGNMENT, LEFTSHIFT_ASSIGNMENT, RIGHTSHIFT_ASSIGNMENT, LEFT, RIGHT, LEFT_CURLY, RIGHT_CURLY, LEFT_BRACKET, RIGHT_BRACKET, SEMICOLON, COLON, DOT, COMMA, BOOLEAN_LITERAL, INTEGER_LITERAL, FLOATING_POINT_LITERAL, IDENTIFIER, ERROR, CHARACTER_LITERAL, STRING_LITERAL;
+
+
+// TODO Array initializers
+// TODO Annotations
+
+// The Syntactic Grammar
+nonterminal Goal;
+// Lexical Structure
+nonterminal Literal, Identifier;
+//Types
+nonterminal Type, PrimitiveType, ReferenceType, ClassType, ArrayType;
+// Names
+nonterminal Name, SimpleName, QualifiedName;
+// Packages
+nonterminal CompilationUnit, TypeDeclaration, TypeDeclarations, ImportDeclaration, ImportDeclarations, PackageDeclaration;
+// Modifiers
+nonterminal Modifiers, Modifier;
+// Classes
+nonterminal ClassDeclaration, ClassDeclarations, Super, ClassBody, ClassMemberDeclaration, ClassMemberDeclarations;
+nonterminal FieldDeclaration, IdentifierList;
+nonterminal MethodDeclaration, MethodHeader, MethodDeclarator, FormalParameterList, FormalParameter, Throws, MethodBody;
+// Blocks and Statements
+nonterminal Block, BlockStatement, BlockStatements, LocalVariableDeclarationStatement, LocalVariableDeclaration, VariableDeclarators, VariableDeclarator, Statement, ExpressionStatement, StatementExpression, IfThenStatement, IfThenElseStatement, WhileStatement, DoWhileStatement, ReturnStatement, BreakStatement, ContinueStatement, ForStatement, ForInit, ForUpdate, StatementExpressionList;
+// Expressions
+nonterminal Expression, AssignmentExpression, ConditionalExpression, InfixExpression, InfixOp, PrefixExpression, PrefixOp, PostfixExpression, Suffix, Suffixs, ArrayAccess, Selector, Selectors, FieldAccess, MethodInvocation, ArgumentList, Primary, ClassInstanceCreationExpression, ArrayCreationExpression, Dimension, Dimensions;
+
+
+//***********************************************
+//Precedences
+//***********************************************
+
+precedence left IDENTIFIER;
+precedence left CLASS, PUBLIC, PRIVATE, PROTECTED, STATIC, NATIVE, FINAL, ABSTRACT, TRANSIENT, SYNCHRONIZED, VOLATILE;
+precedence left ELSE, LEFT, LEFT_CURLY, LEFT_BRACKET, DOT;
+
+//***********************************************
+//The Syntactic Grammar
+//***********************************************
+Goal ::= CompilationUnit
 ;
-
-non terminal Program, MainClass, ClassDeclaration, VarDeclaration, MethodDeclaration, Type, Statement, Expression, Operator, Identifier;
-
-non terminal
-    oomClassDeclaration,
-    oomVarDeclaration,
-    oomMethodDeclaration,
-    oomStatement,
-    oomCommaTypeIdentifier,
-    oomCommaExpression
+/***********************************************/
+//Types
+/***********************************************/
+Type ::= PrimitiveType
+    | ReferenceType
 ;
-
-precedence left ASSIGNMENT, PLUS_ASSIGNMENT, MINUS_ASSIGNMENT, TIMES_ASSIGNMENT, DIVIDE_ASSIGNMENT, MODULE_ASSIGNMENT, BITWISE_NOT_ASSIGNMENT, BITWISE_OR_ASSIGNMENT, BITWISE_AND_ASSIGNMENT, BITWISE_XOR_ASSIGNMENT, LEFTSHIFT_ASSIGNMENT, RIGHTSHIFT_ASSIGNMENT;
-
-precedence left LOGICAL_OR;
-precedence left LOGICAL_AND;
-precedence left BITWISE_OR;
-
-precedence left BITWISE_XOR;
-precedence left BITWISE_AND;
-precedence left EQUALS, DIFFERENT;
-precedence left GREATER, GREATER_EQUALS, SMALLER, SMALLER_EQUALS, INSTANCEOF;
-precedence left LEFTSHIFT, RIGHTSHIFT, DOUBLE_RIGHTSHIFT;
-precedence left PLUS, MINUS;
-precedence left TIMES, DIVIDE, MODULE;
-
-precedence left ELSE, LEFT_BRACKET, POINT;
-
-start with Program;
-
-Program ::= MainClass
-    | MainClass oomClassDeclaration
-;
-MainClass ::= CLASS Identifier LEFT_CURLY PUBLIC STATIC VOID MAIN LEFT STRING LEFT_BRACKET RIGHT_BRACKET Identifier RIGHT LEFT_CURLY Statement RIGHT_CURLY RIGHT_CURLY
-;
-ClassDeclaration ::= CLASS Identifier LEFT_CURLY RIGHT_CURLY
-    | CLASS Identifier EXTENDS Identifier LEFT_CURLY RIGHT_CURLY
-
-    | CLASS Identifier LEFT_CURLY oomVarDeclaration RIGHT_CURLY
-    | CLASS Identifier EXTENDS Identifier LEFT_CURLY oomVarDeclaration RIGHT_CURLY
-
-    | CLASS Identifier LEFT_CURLY oomMethodDeclaration RIGHT_CURLY
-    | CLASS Identifier EXTENDS Identifier LEFT_CURLY oomMethodDeclaration RIGHT_CURLY
-
-    | CLASS Identifier LEFT_CURLY oomVarDeclaration oomMethodDeclaration RIGHT_CURLY
-    | CLASS Identifier EXTENDS Identifier LEFT_CURLY oomVarDeclaration oomMethodDeclaration RIGHT_CURLY
-;
-VarDeclaration ::= Type Identifier SEMICOLON;
-MethodDeclaration ::=
-      PUBLIC Type Identifier LEFT RIGHT LEFT_CURLY RETURN Expression SEMICOLON RIGHT_CURLY
-    | PUBLIC Type Identifier LEFT Type Identifier RIGHT LEFT_CURLY RETURN Expression SEMICOLON RIGHT_CURLY
-    | PUBLIC Type Identifier LEFT Type Identifier oomCommaTypeIdentifier RIGHT LEFT_CURLY RETURN Expression SEMICOLON RIGHT_CURLY
-
-    | PUBLIC Type Identifier LEFT RIGHT LEFT_CURLY oomStatement RETURN Expression SEMICOLON RIGHT_CURLY
-    | PUBLIC Type Identifier LEFT RIGHT LEFT_CURLY oomVarDeclaration RETURN Expression SEMICOLON RIGHT_CURLY
-    | PUBLIC Type Identifier LEFT RIGHT LEFT_CURLY oomVarDeclaration oomStatement RETURN Expression SEMICOLON RIGHT_CURLY
-
-    | PUBLIC Type Identifier LEFT Type Identifier RIGHT LEFT_CURLY oomStatement RETURN Expression SEMICOLON RIGHT_CURLY
-    | PUBLIC Type Identifier LEFT Type Identifier oomCommaTypeIdentifier RIGHT LEFT_CURLY oomStatement RETURN Expression SEMICOLON RIGHT_CURLY
-
-    | PUBLIC Type Identifier LEFT Type Identifier RIGHT LEFT_CURLY oomVarDeclaration RETURN Expression SEMICOLON RIGHT_CURLY
-    | PUBLIC Type Identifier LEFT Type Identifier oomCommaTypeIdentifier RIGHT LEFT_CURLY oomVarDeclaration RETURN Expression SEMICOLON RIGHT_CURLY
-
-    | PUBLIC Type Identifier LEFT Type Identifier RIGHT LEFT_CURLY oomVarDeclaration oomStatement RETURN Expression SEMICOLON RIGHT_CURLY
-    | PUBLIC Type Identifier LEFT Type Identifier oomCommaTypeIdentifier RIGHT LEFT_CURLY oomVarDeclaration oomStatement RETURN Expression SEMICOLON RIGHT_CURLY
-;
-Type ::= INT LEFT_BRACKET RIGHT_BRACKET
+PrimitiveType ::= INT
     | BOOLEAN
-    | INT
-    | Identifier
+    | STRING
+    | DOUBLE
+    | FLOAT
+    | CHAR
+    | LONG
+    | SHORT
+    | BYTE
 ;
-Statement ::= LEFT_CURLY RIGHT_CURLY
-    | LEFT_CURLY oomStatement RIGHT_CURLY
-
-    | IF LEFT Expression RIGHT Statement
-    | IF LEFT Expression RIGHT Statement ELSE Statement
-
-    | WHILE LEFT Expression RIGHT SEMICOLON
-    | WHILE LEFT Expression RIGHT Statement
-
-    | SOUT LEFT Expression RIGHT SEMICOLON
-
-    | Identifier ASSIGNMENT Expression SEMICOLON
-    | Identifier LEFT_BRACKET Expression RIGHT_BRACKET ASSIGNMENT Expression SEMICOLON
+ReferenceType ::= ClassType
+    | ArrayType
 ;
-Expression ::= Expression Operator Expression
-    | Expression LEFT_BRACKET Expression RIGHT_BRACKET
-    | Expression POINT LENGTH
-
-    | Expression POINT Identifier LEFT RIGHT
-    | Expression POINT Identifier LEFT Expression RIGHT
-    | Expression POINT Identifier LEFT Expression oomCommaExpression RIGHT
-
-    | INTEGER_LITERAL
-    | TRUE
-    | FALSE
-    | Identifier
-    | THIS
-    | NEW INT LEFT_BRACKET Expression RIGHT_BRACKET
-    | NEW Identifier LEFT RIGHT
-    | NEW Identifier LEFT Expression RIGHT
-    | LOGICAL_NOT Expression
-    | LEFT Expression RIGHT
+ClassType ::= Name
 ;
-Operator ::= PLUS
-    | MINUS
-    | SMALLER
+ArrayType ::= PrimitiveType LEFT_BRACKET RIGHT_BRACKET
+    | ClassType LEFT_BRACKET RIGHT_BRACKET
+    | ArrayType LEFT_BRACKET RIGHT_BRACKET
+;
+//***********************************************
+//Names
+//***********************************************
+Name ::= SimpleName
+    | QualifiedName
+;
+SimpleName ::= Identifier
+;
+QualifiedName ::= Name DOT Identifier
+;
+//***********************************************
+//Packages
+//***********************************************
+CompilationUnit ::=
+    | TypeDeclarations
+    | ImportDeclarations TypeDeclarations
+    | PackageDeclaration TypeDeclarations
+    | PackageDeclaration ImportDeclarations TypeDeclarations
+;
+TypeDeclaration ::= ClassDeclarations
+    | SEMICOLON
+;
+TypeDeclarations ::= TypeDeclaration
+    | TypeDeclarations TypeDeclaration
+;
+ImportDeclaration ::= IMPORT Name SEMICOLON
+    | IMPORT Name DOT TIMES SEMICOLON
+;
+ImportDeclarations ::= ImportDeclaration
+    | ImportDeclarations ImportDeclaration
+;
+PackageDeclaration ::= PACKAGE Name SEMICOLON
+;
+//***********************************************
+//Modifiers
+//***********************************************
+Modifiers ::= Modifier
+    | Modifiers Modifier
+;
+Modifier ::= PUBLIC
+    | PRIVATE
+    | PROTECTED
+    | STATIC
+    | NATIVE
+    | FINAL
+    | ABSTRACT
+    | TRANSIENT
+    | SYNCHRONIZED
+    | VOLATILE
+;
+//***********************************************
+//Classes
+//***********************************************
+ClassDeclaration ::= CLASS Identifier ClassBody
+    | CLASS Identifier Super ClassBody
+    | Modifiers CLASS Identifier ClassBody
+    | Modifiers CLASS Identifier Super ClassBody
+;
+ClassDeclarations ::= ClassDeclaration
+    | ClassDeclarations ClassDeclaration
+;
+Super ::= EXTENDS ClassType
+;
+ClassBody ::= LEFT_CURLY RIGHT_CURLY
+    | LEFT_CURLY ClassMemberDeclarations RIGHT_CURLY
+;
+ClassMemberDeclarations ::= ClassMemberDeclaration
+    | ClassMemberDeclarations ClassMemberDeclaration
+;
+ClassMemberDeclaration ::= FieldDeclaration
+    | MethodDeclaration
+;
+
+FieldDeclaration ::= Modifiers Type IdentifierList SEMICOLON
+    | Type IdentifierList SEMICOLON
+    | Modifiers Type IdentifierList ASSIGNMENT Literal SEMICOLON
+    | Type IdentifierList ASSIGNMENT Literal SEMICOLON
+;
+IdentifierList ::= Identifier
+    | IdentifierList COMMA Identifier
+;
+
+MethodDeclaration ::= MethodHeader MethodBody
+;
+MethodHeader ::= Type MethodDeclarator
+    | Type MethodDeclarator Throws
+    | VOID MethodDeclarator
+    | VOID MethodDeclarator Throws
+
+    | Modifiers Type MethodDeclarator
+    | Modifiers Type MethodDeclarator Throws
+    | Modifiers VOID MethodDeclarator
+    | Modifiers VOID MethodDeclarator Throws
+;
+MethodDeclarator ::= Identifier LEFT RIGHT
+    | Identifier LEFT FormalParameterList RIGHT
+;
+FormalParameterList ::= FormalParameter
+    | FormalParameterList COMMA FormalParameter
+;
+FormalParameter ::= Type Identifier
+;
+Throws ::= THROWS ClassType
+;
+MethodBody ::= Block
+    | SEMICOLON
+;
+//***********************************************
+//Blocks and Statements
+//***********************************************
+Block ::= LEFT_CURLY RIGHT_CURLY
+    | LEFT_CURLY BlockStatements RIGHT_CURLY
+;
+BlockStatement ::= LocalVariableDeclarationStatement
+    | Statement
+;
+BlockStatements ::= BlockStatement
+    | BlockStatements BlockStatement
+;
+LocalVariableDeclarationStatement ::= LocalVariableDeclaration SEMICOLON
+;
+LocalVariableDeclaration ::= Type VariableDeclarators
+;
+VariableDeclarators ::= VariableDeclarator
+    | VariableDeclarators COMMA VariableDeclarator
+;
+VariableDeclarator ::= Identifier
+    | Identifier ASSIGNMENT Expression
+;
+Statement ::= Block
+    | ExpressionStatement
+    | IfThenStatement
+    | IfThenElseStatement
+    | WhileStatement
+    | DoWhileStatement
+    | ReturnStatement
+    | BreakStatement
+    | ContinueStatement
+    | ForStatement
+;
+ExpressionStatement ::= SEMICOLON
+    | StatementExpression SEMICOLON
+;
+StatementExpression ::= Expression
+;
+IfThenStatement ::= IF LEFT Expression RIGHT Statement
+;
+IfThenElseStatement ::= IF LEFT Expression RIGHT Statement ELSE Statement
+;
+WhileStatement ::= WHILE LEFT Expression RIGHT Statement
+;
+DoWhileStatement ::= DO Statement WHILE LEFT Expression RIGHT SEMICOLON
+;
+ReturnStatement ::= RETURN SEMICOLON
+    | RETURN Expression SEMICOLON
+;
+BreakStatement ::= BREAK SEMICOLON
+;
+ContinueStatement ::= CONTINUE SEMICOLON
+;
+ForStatement ::= FOR LEFT SEMICOLON SEMICOLON RIGHT Statement
+    | FOR LEFT ForInit SEMICOLON SEMICOLON RIGHT Statement
+    | FOR LEFT ForInit SEMICOLON Expression SEMICOLON RIGHT Statement
+    | FOR LEFT ForInit SEMICOLON SEMICOLON ForUpdate RIGHT Statement
+    | FOR LEFT SEMICOLON Expression SEMICOLON RIGHT Statement
+    | FOR LEFT SEMICOLON Expression SEMICOLON ForUpdate RIGHT Statement
+    | FOR LEFT SEMICOLON SEMICOLON ForUpdate RIGHT Statement
+    | FOR LEFT ForInit SEMICOLON Expression SEMICOLON ForUpdate RIGHT Statement
+;
+ForInit ::= StatementExpressionList
+    | LocalVariableDeclaration
+;
+ForUpdate ::= StatementExpressionList
+;
+StatementExpressionList ::= StatementExpression
+    | StatementExpressionList COMMA StatementExpression
+;
+//***********************************************
+//Expressions
+//***********************************************
+Expression ::= ConditionalExpression
+    | AssignmentExpression
+;
+AssignmentExpression ::= ConditionalExpression ASSIGNMENT Expression
+;
+ConditionalExpression ::= InfixExpression
+    | InfixExpression INTERROGATION Expression COLON ConditionalExpression
+;
+InfixExpression ::= PrefixExpression
+    | InfixExpression InfixOp PrefixExpression
+;
+InfixOp ::= LOGICAL_OR
     | LOGICAL_AND
+    | EQUALS
+    | DIFFERENT
+    | SMALLER
+    | GREATER
+    | GREATER_EQUALS
+    | SMALLER_EQUALS
+    | PLUS
+    | MINUS
     | TIMES
+    | DIVIDE
+    | MODULE
 ;
-
-Identifier ::= IDENTIFIER;
-
-/**---------------------------------------------
-              ESPECIAL PRODUCTIONS
-----------------------------------------------*/
-oomClassDeclaration ::= ClassDeclaration
-    | oomClassDeclaration ClassDeclaration
+PrefixExpression ::= PrefixOp PrefixExpression
+    | PostfixExpression
 ;
-oomVarDeclaration ::= VarDeclaration
-    | oomVarDeclaration VarDeclaration
+PrefixOp ::= MINUS
+    | LOGICAL_NOT
 ;
-oomMethodDeclaration ::= MethodDeclaration
-    | oomMethodDeclaration MethodDeclaration
+PostfixExpression ::= Primary
+    | Primary Suffixs
 ;
-oomStatement ::= Statement
-    | oomStatement Statement
+Suffixs ::= Suffix
+    | Suffixs Suffix
 ;
-oomCommaTypeIdentifier ::= COMMA Type Identifier
-    | oomCommaTypeIdentifier COMMA Type Identifier
+Suffix ::= ArrayAccess
+    | FieldAccess
+    | MethodInvocation
+    | Name
+    | INCREMENT
+    | DECREMENT
 ;
-oomCommaExpression ::= COMMA Expression
-    | oomCommaExpression COMMA Expression
+ArrayAccess ::= LEFT_BRACKET Expression RIGHT_BRACKET
+;
+Selector ::= DOT Identifier
+;
+Selectors ::= Selector
+    | Selectors Selector
+;
+FieldAccess ::= Selectors
+;
+MethodInvocation ::= LEFT RIGHT
+    | LEFT ArgumentList RIGHT
+    | Selectors LEFT RIGHT
+    | Selectors LEFT ArgumentList RIGHT
+;
+ArgumentList ::= Expression
+    | ArgumentList COMMA Expression
+;
+Primary ::= LEFT Expression RIGHT
+    | THIS
+    | Literal
+    | Name
+    | SUPER FieldAccess
+    | SUPER MethodInvocation
+    | ClassInstanceCreationExpression
+    | ArrayCreationExpression
+;
+ClassInstanceCreationExpression ::= NEW ClassType LEFT RIGHT
+    | NEW ClassType LEFT ArgumentList RIGHT
+;
+ArrayCreationExpression ::= NEW PrimitiveType LEFT_BRACKET Expression RIGHT_BRACKET
+    | NEW PrimitiveType LEFT_BRACKET Expression RIGHT_BRACKET Dimensions
+    | NEW ClassType LEFT_BRACKET Expression RIGHT_BRACKET
+    | NEW ClassType LEFT_BRACKET Expression RIGHT_BRACKET Dimensions
+;
+Dimension ::= LEFT_BRACKET RIGHT_BRACKET
+;
+Dimensions ::= Dimension
+    | Dimensions Dimension
+;
+//***********************************************
+//Lexical Structure
+//***********************************************
+Identifier ::= IDENTIFIER
+;
+Literal ::= INTEGER_LITERAL
+    | FLOATING_POINT_LITERAL
+    | BOOLEAN_LITERAL
+    | CHARACTER_LITERAL
+    | STRING_LITERAL
+    | NULL_LITERAL
 ;

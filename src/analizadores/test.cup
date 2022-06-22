@@ -1,0 +1,201 @@
+package analizadores;
+
+import java_cup.runtime.*;
+
+parser code
+{:
+    /**
+     * Método al que se llama automáticamente ante algún error sintactico.
+     **/
+    public void syntax_error(Symbol s) {
+        System.out.println("Error Sintáctico en la Línea " + (s.left) +
+        " Columna "+s.right+ ". No se esperaba este componente: " +s.value+".");
+    }
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintáctico
+     * en el que ya no es posible una recuperación de errores.
+     **/
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+        System.out.println("Error síntactico irrecuperable en la Línea " +
+        (s.left)+ " Columna "+s.right+". Componente " + s.value +
+        " no reconocido.");
+    }
+:}
+
+terminal
+    IDENTIFIER,
+
+    INTEGER_LITERAL,
+    FLOATING_POINT_LITERAL,
+    BOOLEAN_LITERAL,
+    CHARACTER_LITERAL,
+    STRING_LITERAL,
+    NULL_LITERAL
+;
+
+nonterminal Identifier, Literal;
+nonterminal Type, PrimitiveType, NumericType, IntegralType, FloatingPointType, ReferenceType, ClassOrInterfaceType, ClassType, InterfaceType, TypeVariable, ArrayType, Dims, TypeParameter, TypeParameterModifier, TypeBound, AdditionalBound, TypeArguments, TypeArgumentList, TypeArgument, Wildcard, WildcardBounds, AdditionalBounds;
+nonterminal TypeName, PackageOrTypeName, ExpressionName, MethodName, PackageName, AmbiguousName;
+nonterminal CompilationUnit, PackageDeclaration, PackageModifier, ImportDeclaration, ImportDeclarations, SingleTypeImportDeclaration, TypeImportOnDemandDeclaration, SingleStaticImportDeclaration, StaticImportOnDemandDeclaration, TypeDeclaration, TypeDeclaration, PointIdentifiers;
+nonterminal ClassDeclaration, NormalClassDeclaration, ClassModifier, TypeParameters, TypeParametersList, SuperClass, Superinterfaces, InterfaceTypeList, ClassBody, ClassBodyDeclaration, ClassMemberDeclaration, FieldDeclaration, FieldModifier, VariableDeclaratorList, VariableDeclarator, VariableDeclaratorId, VariableInitializer, UnannType, UnannPrimitiveType, UnannReferenceType, UnannClassOrInterfaceType, UnannClassType, UnannInterfaceType, UnannTypeVariable, UnannArrayType, MethodDeclaration, MethodModifier, MethodHeader, Result, MethodDeclarator, FormalParameterList, FormalParameters, FormalParameter, VariableModifier, LastFormalParameter, ReceiverParameter, Throws, ExceptionTypeList, ExceptionType, MethodBody, InstanceInitializer, StaticInitializer, ConstructorDeclaration, ConstructorModifier, ConstructorDeclarator, SimpleTypeName, ConstructorBody, ExplicitConstructorInvocation, EnumDeclaration, EnumBody, EnumConstantList, EnumConstant, EnumConstantModifier, EnumBodyDeclarations;
+nonterminal InterfaceDeclaration, NormalInterfaceDeclaration, InterfaceModifier, ExtendsInterfaces, InterfaceBody, InterfaceMemberDeclaration, ConstantDeclaration, ConstantModifier, InterfaceMethodDeclaration, InterfaceMethodModifier, AnnotationTypeDeclaration, AnnotationTypeBody, AnnotationTypeMemberDeclaration, AnnotationTypeElementDeclaration,
+
+/*-------------------------------------
+           LEXICAL STRUCTURE
+-------------------------------------*/
+Identifier ::= IDENTIFIER;
+Literal ::= INTEGER_LITERAL
+    | FLOATING_POINT_LITERAL
+    | BOOLEAN_LITERAL
+    | CHARACTER_LITERAL
+    | STRING_LITERAL
+    | NULL_LITERAL
+;
+/*-------------------------------------
+     TYPES, VALUES AND VARIABLES
+-------------------------------------*/
+Type ::= PrimitiveType
+    | ReferenceType
+;
+PrimitiveType ::= NumericType
+    | BOOLEAN
+    | Annotations NumericType
+    | Annotations BOOLEAN
+;
+NumericType ::= FloatingPointType
+    IntegralType
+;
+IntegralType ::= BYTE | SHORT | INT | LONG | CHAR
+;
+FloatingPointType ::= FLOAT | DOUBLE
+;
+ReferenceType ::= ClassOrInterfaceType
+    | TypeVariable
+    | ArrayType
+;
+ClassOrInterfaceType ::= ClassType
+    InterfaceType
+;
+ClassType ::= Identifier
+    | Identifier TypeArguments
+    | Annotations Identifier
+    | Annotations Identifier TypeArguments
+
+    | ClassOrInterfaceType POINT Identifier
+    | ClassOrInterfaceType POINT Identifier TypeArguments
+    | ClassOrInterfaceType POINT Annotations Identifier
+    | ClassOrInterfaceType POINT Annotations Identifier TypeArguments
+;
+InterfaceType ::= ClassType
+;
+TypeVariable ::= Identifier
+    | Annotations Identifier
+;
+ArrayType ::= PrimitiveType Dims
+    ClassOrInterfaceType Dims
+    TypeVariable Dims
+;
+TypeParameter ::= Identifier
+    | Identifier TypeBound
+    | TypeParameterModifiers Identifier TypeBound
+;
+TypeParameterModifier ::= Annotation
+;
+TypeBound ::= EXTENDS TypeVariable
+    | EXTENDS ClassOrInterfaceType
+    | EXTENDS ClassOrInterfaceType AdditionalBounds
+;
+AdditionalBound ::= BITWISE_AND InterfaceType
+;
+AdditionalBounds ::= AdditionalBound
+    | AdditionalBounds AdditionalBound
+;
+TypeArguments ::= SMALLER TypeArgumentList GREATER
+;
+TypeArgumentList ::= TypeArgument
+    | TypeArgumentList COMMA TypeArgument
+;
+TypeArgument ::= ReferenceType
+    | Wildcard
+;
+Wildcard ::= INTERROGATION
+    | INTERROGATION WildcardBounds
+    | Annotations INTERROGATION
+    | Annotations INTERROGATION WildcardBounds
+;
+WildcardBounds ::= EXTENDS ReferenceType
+    SUPER ReferenceType
+;
+/*-------------------------------------
+                NAMES
+-------------------------------------*/
+TypeName ::= Identifier
+    | PackageOrTypeName POINT Identifier
+;
+PackageOrTypeName ::= Identifier
+    | PackageOrTypeName POINT Identifier
+;
+ExpressionName ::= Identifier
+    | AmbiguousName POINT Identifier
+;
+MethodName ::= Identifier
+;
+PackageName ::= Identifier
+    | PackageName POINT Identifier
+;
+AmbiguousName ::= Identifier
+    | AmbiguousName POINT Identifier
+;
+/*-------------------------------------
+                PACKAGES
+-------------------------------------*/
+CompilationUnit ::=
+    | PackageDeclaration
+    | ImportDeclarations
+    | TypeDeclarations
+    | PackageDeclaration TypeDeclarations
+    | ImportDeclarations TypeDeclarations
+    | PackageDeclaration ImportDeclarations
+    | PackageDeclaration ImportDeclarations TypeDeclarations
+;
+TypeDeclarations ::= TypeDeclaration
+    | TypeDeclarations TypeDeclaration
+;
+ImportDeclarations ::= ImportDeclaration
+    | ImportDeclarations ImportDeclaration
+;
+PackageDeclaration ::= PACKAGE Identifier SEMICOLON
+    | PACKAGE Identifier PointIdentifiers SEMICOLON
+    | PackageModifiers PACKAGE Identifier SEMICOLON
+    | PackageModifiers PACKAGE Identifier PointIdentifiers SEMICOLON
+;
+PointIdentifiers ::= POINT Identifier
+    | PointIdentifiers POINT Identifier
+;
+PackageModifiers ::= PackageModifier
+    | PackageModifiers PackageModifier
+;
+PackageModifier ::= Annotation
+;
+ImportDeclaration ::= SingleTypeImportDeclaration
+    | TypeImportOnDemandDeclaration
+    | SingleStaticImportDeclaration
+    | StaticImportOnDemandDeclaration
+;
+SingleTypeImportDeclaration ::= IMPORT TypeName SEMICOLON
+;
+TypeImportOnDemandDeclaration ::= IMPORT PackageOrTypeName POINT TIMES SEMICOLON
+;
+SingleStaticImportDeclaration ::= IMPORT STATIC TypeName POINT Identifier SEMICOLON
+;
+StaticImportOnDemandDeclaration ::= IMPORT STATIC TypeName POINT TIMES SEMICOLON
+;
+TypeDeclaration ::= ClassDeclaration
+    | InterfaceDeclaration
+    | SEMICOLON
+;
+/*-------------------------------------
+               CLASSES
+-------------------------------------*/
+
